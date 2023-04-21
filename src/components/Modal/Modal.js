@@ -39,8 +39,9 @@ modalRoot
 };
 
 Modal.propTypes = {
-onClose: PropTypes.func,
+onClose: PropTypes.func.isRequired,
 largeImageURL: PropTypes.string.isRequired,
 };
+  
 
 export default Modal;

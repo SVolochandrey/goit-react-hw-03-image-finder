@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
-import './Button.module.css';
+import css from './Button.module.css';
 
 const Button =({onLoadMore}) => {
 return (
-    <div className='button-container' onClick={onLoadMore}>
-        <button type='button'className='button'>
+    <div className={css.buttonContainer} onClick={onLoadMore}>
+        <button type='button'className={css.button}>
             Load more
         </button>
     </div>
@@ -12,7 +12,7 @@ return (
 };
 
 Button.propTypes = {
-loadMore: PropTypes.func,
+onLoadMore: PropTypes.func,
 };
 
 export default Button;

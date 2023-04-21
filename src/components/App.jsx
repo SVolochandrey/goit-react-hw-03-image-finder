@@ -1,6 +1,5 @@
 import Button from './Button/Button';
 import ImageGallery from './ImageGallery/ImageGallery';
-import Loader from './Loader/Loader';
 import Modal from './Modal/Modal';
 import Searchbar from './Searchbar/Searchbar';
 import fetchImages from './Services/API';
@@ -23,8 +22,6 @@ id: null,
 };
 
 componentDidUpdate(_, prevState) {
-console.log(prevState.page);
-console.log(this.state.page);
 const {searchQuery, page} = this.state;
 
 if (prevState.searchQuery !== searchQuery || prevState.page !== page) {
@@ -40,10 +37,10 @@ return;
 
 try {
 const {hits, totalHits} = await fetchImages (query, page);
-console.log(hits, totalHits);
 this.setState(prevState => ({
 images: [...prevState.images, ...hits],
-loadMore: this.state.page < Math.ceil(totalHits/this.state.per_page),
+loadMore: prevState.page < Math.ceil(totalHits/prevState.per_page),
+error: null,
 }));
 }
 
@@ -56,6 +53,7 @@ this.setState({isLoading: false});
 }
 };
 
+
 formSubmit = searchQuery => {
 this.setState({
 searchQuery,
@@ -66,8 +64,11 @@ loadMore: false,
 };
 
 onLoadMore = () => {
+const {loadMore} = this.state;
+if (loadMore) {
 this.setState(prevState => ({page: prevState.page + 1}));
 this.scrollOnMoreButton();
+}
 };
 
 scrollOnMoreButton = () => {
@@ -88,25 +89,31 @@ largeImageURL: largeImageURL,
 closeModal = () => {
 this.setState({
 showModal: false,
+largeImageURL: '',
 });
 };
 
 render() {
-const {images, isLoading, loadMore, page, showModal, largeImageURL} = this.state;
+const {images, loadMore, showModal, largeImageURL} = this.state;
 return (
 <>
 <Searchbar onSubmit={this.formSubmit}/>
 
-{isLoading ? (
-<Loader />
-) : (
-<ImageGallery images={images} openModal={this.openModal}/>
+{images.length > 0 && <ImageGallery images={images} openModal={this.openModal}/>}
+
+{loadMore && (
+<Button onLoadMore={this.onLoadMore} />
 )}
 
-{loadMore && <Button onLoadMore={this.onLoadMore} page={page} />}
+{!loadMore && images.length > 0 && (
+<p>No more images to load.</p>
+)}
 
-{showModal && (<Modal largeImageURL={largeImageURL} onClose={this.closeModal} />)}
+{showModal && (
+<Modal largeImageURL={largeImageURL} onClose={this.closeModal} />
+)}
 </>
 );
 }
+
 }

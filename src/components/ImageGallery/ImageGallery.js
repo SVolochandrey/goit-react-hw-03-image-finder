@@ -17,12 +17,16 @@ const ImageGallery =({images, openModal}) => (
 );
 
 ImageGallery.propTypes = {
-images: PropTypes.array,
-id: PropTypes.number,
-webformatURL: PropTypes.string,
-tags: PropTypes.string,
-largeImageURL: PropTypes.string,
-openModal: PropTypes.func
+images: PropTypes.arrayOf(
+PropTypes.shape({
+id: PropTypes.number.isRequired,
+webformatURL: PropTypes.string.isRequired,
+tags: PropTypes.string.isRequired,
+largeImageURL: PropTypes.string.isRequired,
+})
+).isRequired,
+openModal: PropTypes.func.isRequired,
 };
+  
 
 export default ImageGallery;
